@@ -1,4 +1,6 @@
 const TRACK_LOADED = 2;
+// HACK hardcoded duration for this example (otherwise need to monitor video loadedmetadata)
+const VIDEO_DURATION = 8.374999;
 
 const video = document.querySelector('video');
 const playButton = document.querySelector('[data-action="playpause"]');
@@ -9,6 +11,7 @@ const timecodeButton = document.querySelector('[data-action="timecode"]');
 const timecodeRaf = document.querySelector('#timecode-raf');
 const timecodeCue = document.querySelector('#timecode-cuechange');
 const timecodeTrack = document.querySelector('track#timecode-track');
+const scrubber = document.querySelector('.scrubber');
 
 let timecodes;
 
@@ -49,11 +52,13 @@ function toggleSubtitles() {
 
 
 function gotoChapter(chapterId) {
+	video.pause();
+
 	const chaptersTrack = document.querySelector('track#chapters');
 	if (chaptersTrack.readyState === TRACK_LOADED) {
 		const cue = Array.from(chaptersTrack.track.cues).find(cue => cue.id === chapterId);
 		if (cue) {
-			video.pause();
+			// NOTE this fails if video.seekable ranges are empty or 0–0 (which seems to happen after 5x playback rate?)
 			video.currentTime = cue.startTime;
 		}
 
@@ -81,10 +86,21 @@ function renderTimecodeOnCueChange() {
 }
 
 
-function renderTimecode() {
+function renderScrubber() {
+	scrubber.style.setProperty('--scrubber-value', `${scrubber.value}%`);
+}
+
+
+function renderUI() {
+	scrubber.value = Math.floor(video.currentTime / VIDEO_DURATION * 100);
+	renderScrubber();
+
 	if (timecodes) {
 		timecodeRaf.textContent = getTimecode();
-		window.requestAnimationFrame(renderTimecode);
+	}
+
+	if (!video.paused) {
+		window.requestAnimationFrame(renderUI);
 	}
 }
 
@@ -93,7 +109,8 @@ function initRenderTimecode(track) {
 	timecodes = Array.from(track.cues).map(cue => [cue.endTime, cue.text])
 	timecodeRaf.hidden = false;
 	timecodeCue.hidden = false;
-	window.requestAnimationFrame(renderTimecode);
+	renderUI();
+	window.requestAnimationFrame(renderUI);
 	timecodeButton.classList.add('active');
 }
 
@@ -153,8 +170,14 @@ document.addEventListener('click', event => {
 
 
 // sync play/pause button label to video state
-video.addEventListener('play', () => playButton.classList.add('active'));
+video.addEventListener('play', () => {
+	renderUI();
+	playButton.classList.add('active');
+});
 video.addEventListener('pause', () => playButton.classList.remove('active'));
+video.addEventListener('seeked', renderUI);
+
 video.addEventListener('volumechange', () => muteButton.classList.toggle('active', video.muted));
 video.addEventListener('ratechange', () => rateButton.classList.toggle('active', video.playbackRate > 1));
+
 timecodeTrack.addEventListener('cuechange', renderTimecodeOnCueChange);

@@ -8,6 +8,7 @@ body {
 	width: 640px;
 	display: flex;
 	flex-flow: column;
+	background: #000;
 }
 
 
@@ -72,4 +73,14 @@ svg {
 	height: 32px;
 	width: 100%;
 	fill: currentColor;
+}
+
+
+.scrubber {
+	appearance: none;
+	-webkit-appearance: none;
+	background: linear-gradient(#777,#777) no-repeat, #222;
+	background-size: var(--scrubber-value, 0%) 100%;
+	margin: 1px;
+	height: 3px;
 }
