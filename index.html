@@ -41,17 +41,22 @@
 			<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
 			<path d="M0 0h24v24H0z" fill="none"/>
 		</symbol>
+		<symbol id="svg-ff" viewBox="0 0 24 24">
+			<path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/>
+			<path d="M0 0h24v24H0z" fill="none"/>
+		</symbol>
 	</svg>
 
 
 	<div class="video">
 		<video preload="auto" autoplay loop>
 			<source src="hot-dog.mp4" type="video/mp4">
-			<track id="timecode-track" kind="subtitles" src="hot-dog-smpte.vtt">
+			<track id="timecode-track" kind="metadata" src="hot-dog-smpte.vtt">
 			<track id="subtitles" kind="subtitles" srclang="en" src="hot-dog-subtitles.en.vtt">
 		</video>
 
 		<div id="timecode-raf" class="cue" hidden></div>
+		<div id="timecode-cuechange" class="cue" hidden></div>
 
 		<div class="toolbar">
 			<button data-action="playpause">
@@ -65,29 +70,48 @@
 				</span>
 			</button>
 
+			<button data-action="playbackrate">
+				<span class="inactive">
+					<svg><use xlink:href="#svg-ff"/></svg>
+					<span role="tooltip">1x</span>
+				</span>
+				<span class="active">
+					<svg><use xlink:href="#svg-ff"/></svg>
+					<span role="tooltip">5x</span>
+				</span>
+			</button>
+
 			<button data-action="mute">
 				<span class="active">
 					<svg><use xlink:href="#svg-mute"/></svg>
+					<span role="tooltip">Mute</span>
 				</span>
 				<span class="inactive">
 					<svg><use xlink:href="#svg-volume"/></svg>
+					<span role="tooltip">Mute</span>
 				</span>
-				<span role="tooltip">Mute</span>
 			</button>
 
 			<button data-action="subtitles">
-				<svg><use xlink:href="#svg-cc"/></svg>
-				<span role="tooltip">Subtitles</span>
+				<span class="active">
+					<svg><use xlink:href="#svg-cc"/></svg>
+					<span role="tooltip">Subtitles</span>
+				</span>
+				<span class="inactive">
+					<svg><use xlink:href="#svg-cc"/></svg>
+					<span role="tooltip">None</span>
+				</span>
 			</button>
 
 			<button data-action="timecode">
 				<span class="inactive">
 					<svg><use xlink:href="#svg-timer-off"/></svg>
+					<span role="tooltip">Timecode</span>
 				</span>
 				<span class="active">
-						<svg><use xlink:href="#svg-timer"/></svg>
+					<svg><use xlink:href="#svg-timer"/></svg>
+					<span role="tooltip">Timecode</span>
 				</span>
-				<span role="tooltip">Timecode</span>
 			</button>
 		</div>
 	</div>

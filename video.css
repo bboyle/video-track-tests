@@ -1,3 +1,8 @@
+body {
+	line-height: 1.3;
+}
+
+
 .video {
 	position: relative;
 	width: 640px;
@@ -9,6 +14,13 @@
 #timecode-raf {
 	position: absolute;
 	top: 2px;
+	right: 2px;
+}
+
+
+#timecode-cuechange {
+	position: absolute;
+	top: calc(4px + 1.9em);
 	right: 2px;
 }
 

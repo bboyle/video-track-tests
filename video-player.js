@@ -2,10 +2,13 @@ const TRACK_LOADED = 2;
 
 const video = document.querySelector('video');
 const playButton = document.querySelector('[data-action="playpause"]');
+const rateButton = document.querySelector('[data-action="playbackrate"]');
 const muteButton = document.querySelector('[data-action="mute"]');
 const subtitlesButton = document.querySelector('[data-action="subtitles"]');
 const timecodeButton = document.querySelector('[data-action="timecode"]');
-const timecodeDiv = document.querySelector('#timecode-raf');
+const timecodeRaf = document.querySelector('#timecode-raf');
+const timecodeCue = document.querySelector('#timecode-cuechange');
+const timecodeTrack = document.querySelector('track#timecode-track');
 
 let timecodes;
 
@@ -19,24 +22,29 @@ function playPause() {
 }
 
 
+function togglePlaybackRate() {
+	video.playbackRate = video.playbackRate === 1 ? 5 : 1;
+}
+
+
 function toggleMute() {
 	video.muted = ! video.muted;
 }
 
 
-function toggleTextTrack(trackId) {
+function toggleTextTrack(trackId, loadState = 'showing') {
 	const trackElement = document.querySelector(`track#${trackId}`);
 	if (trackElement) {
 		const track = trackElement.track;
-		track.mode = track.mode === 'showing' ? 'disabled' : 'showing';
+		track.mode = track.mode === 'disabled' ? loadState : 'disabled';
 	}
 	return trackElement;
 }
 
 
 function toggleSubtitles() {
-	const track = toggleTextTrack('subtitles');
-	subtitlesButton.classList.toggle('active', track.mode === 'showing');
+	const trackElement = toggleTextTrack('subtitles');
+	subtitlesButton.classList.toggle('active', trackElement.track.mode === 'showing');
 }
 
 
@@ -49,9 +57,16 @@ function getTimecode() {
 }
 
 
+function renderTimecodeOnCueChange() {
+	if (timecodes) {
+		timecodeCue.textContent = getTimecode();
+	}
+}
+
+
 function renderTimecode() {
 	if (timecodes) {
-		timecodeDiv.textContent = getTimecode();
+		timecodeRaf.textContent = getTimecode();
 		window.requestAnimationFrame(renderTimecode);
 	}
 }
@@ -59,7 +74,8 @@ function renderTimecode() {
 
 function initRenderTimecode(track) {
 	timecodes = Array.from(track.cues).map(cue => [cue.endTime, cue.text])
-	timecodeDiv.hidden = false;
+	timecodeRaf.hidden = false;
+	timecodeCue.hidden = false;
 	window.requestAnimationFrame(renderTimecode);
 	timecodeButton.classList.add('active');
 }
@@ -67,8 +83,8 @@ function initRenderTimecode(track) {
 
 function toggleTimecode() {
 	// turn on captions
-	const trackElement = toggleTextTrack('timecode-track');
-	if (trackElement && trackElement.track && trackElement.track.mode === 'showing') {
+	const trackElement = toggleTextTrack('timecode-track', 'hidden');
+	if (trackElement && trackElement.track && trackElement.track.mode !== 'disabled') {
 		// get frame numbers
 		if (trackElement.readyState === TRACK_LOADED) {
 			initRenderTimecode(trackElement.track);
@@ -76,7 +92,8 @@ function toggleTimecode() {
 			trackElement.addEventListener('load', event => initRenderTimecode(event.target.track));
 		}
 	} else {
-		timecodeDiv.hidden = true;
+		timecodeRaf.hidden = true;
+		timecodeCue.hidden = true;
 		timecodes = null;
 		timecodeButton.classList.remove('active');
 	}
@@ -88,6 +105,10 @@ document.addEventListener('click', event => {
 		switch (event.target.dataset.action) {
 		case 'playpause':
 			playPause();
+			break;
+
+		case 'playbackrate':
+			togglePlaybackRate();
 			break;
 
 		case 'mute':
@@ -110,3 +131,5 @@ document.addEventListener('click', event => {
 video.addEventListener('play', () => playButton.classList.add('active'));
 video.addEventListener('pause', () => playButton.classList.remove('active'));
 video.addEventListener('volumechange', () => muteButton.classList.toggle('active', video.muted));
+video.addEventListener('ratechange', () => rateButton.classList.toggle('active', video.playbackRate > 1));
+timecodeTrack.addEventListener('cuechange', renderTimecodeOnCueChange);
