@@ -58,7 +58,7 @@ function gotoChapter(chapterId) {
 	if (chaptersTrack.readyState === TRACK_LOADED) {
 		const cue = Array.from(chaptersTrack.track.cues).find(cue => cue.id === chapterId);
 		if (cue) {
-			// NOTE this fails if video.seekable ranges are empty or 0–0 (which seems to happen after 5x playback rate?)
+			// NOTE this fails if video.seekable ranges are empty or 0–0 (which seems to happen after 5x playback rate with local file?)
 			video.currentTime = cue.startTime;
 		}
 
