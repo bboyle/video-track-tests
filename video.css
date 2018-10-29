@@ -1,0 +1,63 @@
+.video {
+	position: relative;
+	width: 640px;
+	display: flex;
+	flex-flow: column;
+}
+
+
+#timecode-raf {
+	position: absolute;
+	top: 2px;
+	right: 2px;
+}
+
+
+.toolbar {
+	display: flex;
+	flex-flow: row;
+	background: #111;
+	color: #fafafa;
+}
+
+
+button {
+	border: none;
+	background: transparent;
+	color: #777;
+	height: 64px;
+	width: 64px;
+	position: relative;
+	font-size: 80%;
+	display: flex;
+	flex-flow: column;
+	justify-content: center;
+	align-items: center;
+}
+
+
+button:hover {
+	outline: none;
+	color: #fafafa;
+	background: #fff2;
+}
+
+
+button.active > .inactive,
+button > .active {
+	display: none;
+}
+
+
+button > .inactive,
+button.active > .active {
+	pointer-events: none;
+	display: inline;
+}
+
+
+svg {
+	height: 32px;
+	width: 100%;
+	fill: currentColor;
+}

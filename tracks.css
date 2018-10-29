@@ -1,0 +1,23 @@
+.cue,
+::cue {
+	background: rgba(0, 0, 0, 0.67);
+	color: #fafafa;
+	font-family: "Monaco", "Consolas", monospace;
+	padding: .3em .2em;
+}
+
+
+::cue(v) {
+	font-family: "Segoe UI", "Futura", sans-serif;
+	font-weight: bold;
+}
+
+
+::cue(v[voice="Allison"]) {
+	color: #D774DE;
+}
+
+
+::cue(v[voice="Gary"]) {
+	color: #31B4E0;
+}
