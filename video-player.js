@@ -48,6 +48,23 @@ function toggleSubtitles() {
 }
 
 
+function gotoChapter(chapterId) {
+	const chaptersTrack = document.querySelector('track#chapters');
+	if (chaptersTrack.readyState === TRACK_LOADED) {
+		const cue = Array.from(chaptersTrack.track.cues).find(cue => cue.id === chapterId);
+		if (cue) {
+			video.pause();
+			video.currentTime = cue.startTime;
+		}
+
+	} else {
+		// load
+		chaptersTrack.addEventListener('load', () => gotoChapter(chapterId));
+		chaptersTrack.track.mode = 'hidden';
+	}
+}
+
+
 function getTimecode() {
 	const index = timecodes.findIndex(tuple => tuple[0] >= video.currentTime);
 	if (index !== -1) {
@@ -117,6 +134,14 @@ document.addEventListener('click', event => {
 
 		case 'subtitles':
 			toggleSubtitles();
+			break;
+
+		case 'shot1':
+			gotoChapter('shot1');
+			break;
+
+		case 'shot2':
+			gotoChapter('shot2');
 			break;
 
 		case 'timecode':

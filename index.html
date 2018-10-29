@@ -45,6 +45,10 @@
 			<path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/>
 			<path d="M0 0h24v24H0z" fill="none"/>
 		</symbol>
+		<symbol id="svg-bookmark" viewBox="0 0 24 24">
+			<path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+			<path d="M0 0h24v24H0z" fill="none"/>
+		</symbol>
 	</svg>
 
 
@@ -53,6 +57,7 @@
 			<source src="hot-dog.mp4" type="video/mp4">
 			<track id="timecode-track" kind="metadata" src="hot-dog-smpte.vtt">
 			<track id="subtitles" kind="subtitles" srclang="en" src="hot-dog-subtitles.en.vtt">
+			<track id="chapters" kind="chapters" srclang="en" src="hot-dog-chapters.en.vtt">
 		</video>
 
 		<div id="timecode-raf" class="cue" hidden></div>
@@ -100,6 +105,20 @@
 				<span class="inactive">
 					<svg><use xlink:href="#svg-cc"/></svg>
 					<span role="tooltip">None</span>
+				</span>
+			</button>
+
+			<button data-action="shot1">
+				<span class="inactive">
+					<svg><use xlink:href="#svg-bookmark"/></svg>
+					<span role="tooltip">Shot 1</span>
+				</span>
+			</button>
+
+			<button data-action="shot2">
+				<span class="inactive">
+					<svg><use xlink:href="#svg-bookmark"/></svg>
+					<span role="tooltip">Shot 2</span>
 				</span>
 			</button>
 
